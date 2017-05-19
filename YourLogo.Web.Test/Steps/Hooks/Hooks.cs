@@ -1,8 +1,9 @@
 ﻿
 using BoDi;
 using System;
+using System.IO;
+using System.Reflection;
 using TechTalk.SpecFlow;
-using YourLogo.Web.Driver;
 using YourLogo.Web.Driver.Drivers;
 
 namespace YourLogo.Web.Test.Steps.Hooks
@@ -11,6 +12,7 @@ namespace YourLogo.Web.Test.Steps.Hooks
     public class Hooks
     {
         private readonly IObjectContainer _objectContainer;
+        private string _assemblyFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         public IYourLogoDriver yourlogodriver;
 
         public Hooks(IObjectContainer objectContainer)
@@ -21,8 +23,8 @@ namespace YourLogo.Web.Test.Steps.Hooks
         [BeforeScenario]
         public void BeforeScenario()
         {
-            yourlogodriver = new ChromeYourLogoDriver(AppDomain.CurrentDomain.BaseDirectory);
-            _objectContainer.RegisterInstanceAs<IYourLogoDriver>(yourlogodriver);
+            yourlogodriver = new ChromeYourLogoDriver(_assemblyFolder);
+            _objectContainer.RegisterInstanceAs(yourlogodriver);
         }
         [AfterScenario]
         public void AfterScenario()
@@ -30,10 +32,7 @@ namespace YourLogo.Web.Test.Steps.Hooks
             // Take Screenshot on failure and Dispose the driver
             try
             {
-                //if (ScenarioContext.Current.TestError != null)
-                //{
                     yourlogodriver.TakeScreenshot(String.Format("{0}-{1}-{2}.jpeg", "C:\\", ScenarioContext.Current.ScenarioInfo.Title.Replace(" ", ""), DateTime.Now.ToString("ddMMyyyyHHmm")));
-                //}
             }
             catch (Exception)
             {

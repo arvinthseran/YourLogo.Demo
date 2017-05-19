@@ -215,3 +215,4 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+/packages/Selenium.WebDriver.ChromeDriver.2.29.0/driver/win32/chromedriver.exe

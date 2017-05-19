@@ -20,16 +20,16 @@ namespace YourLogo.Web.Driver.Drivers
 
         protected YourLogoDriver(IWebDriver driver, int timeout)
         {
-            webdriver = driver;
             _defaultNavigationTimeOutinSec = timeout;
-            StarttheDriver();
+            webdriver = ConfigureTimeOut(driver, timeout);
+            GoToURL(@"http://automationpractice.com/index.php");
         }
 
-        private void StarttheDriver()
+        private IWebDriver ConfigureTimeOut(IWebDriver driver, int timeout)
         {
-            GoToURL(@"http://automationpractice.com/index.php");
-            webdriver.Manage().Window.Maximize();
-            webdriver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(_defaultNavigationTimeOutinSec));
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(timeout);
+            driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(timeout);
+            return driver;
         }
 
         public void GoToURL(string url)
